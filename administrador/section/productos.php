@@ -83,6 +83,4 @@ $listaLibros = $sentenciaSQL->fetchAll(PDO::FETCH_ASSOC);
     
 </div>
 
-<img src="<?php echo $libro['imagen'] ?>" alt="hola">
-
 <?php include("../template/pie.php"); ?>
