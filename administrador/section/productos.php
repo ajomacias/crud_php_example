@@ -4,36 +4,25 @@ $txtNombre=(isset($_POST['txtNombre']))?$_POST['txtNombre']:"";
 $txtImagen=(isset($_POST['txtImagen']))?$_POST['txtImagen']:"";
 $accion=(isset($_POST['action']))?$_POST['action']:"";
 
-echo $txtID."</br>";
-echo $txtNombre."</br>";
-echo $txtImagen."</br>";
-echo $accion."</br>";
+include("../config/db.php");
 
 switch ($accion){
     case "Agregar":
-        echo "Presionando boton agregar";
+        $sentenciaSQL= $conexion->prepare("INSERT INTO libros (id, nombre, imagen) VALUES (NULL,:nombre,:imagen);");
+        $sentenciaSQL->bindParam(":nombre",$txtNombre);
+        $sentenciaSQL->bindParam(":imagen",$txtImagen);
+        $sentenciaSQL->execute();
         break;
     case "Cancelar":
-        echo "Presionando boton cancelarr";
         break;
     
     case "Modificar":
-        echo "Presionando el boton Modificar";
         break;
     }
+$sentenciaSQL= $conexion->prepare("SELECT * FROM libros");
+$sentenciaSQL->execute();
+$listaLibros = $sentenciaSQL->fetchAll(PDO::FETCH_ASSOC);
 
-$host="localhost";
-$bd="sitio";
-$usuario="root";
-$contraseña="";
-
-try {
-    $conexion = new PDO("mysql:host=$host;dbname=$bd", $usuario, $contraseña);
-    if($conexion){ echo "conectado a la base";}
-
-} catch ( Exception $ex ) {
-    echo $ex->getMessage();
-}
 
 ?>
 <?php include("../template/cabecera.php"); ?>
@@ -81,15 +70,19 @@ try {
             </tr>
         </thead>
         <tbody>
+            <?php foreach ($listaLibros as $libro){?>
             <tr>
-                <td>ID</td>
-                <td>Nombre</td>
-                <td>Imagen</td>
-                <td>Actions</td>
+                <td> <?php echo $libro['id'] ?> </td>
+                <td><?php echo $libro['nombre'] ?></td>
+                <td> <img class="img-table" src="<?php echo $libro['imagen'] ?>" alt="hola"></td>
+                <td><?php echo $libro['id'] ?></td>
             </tr>
+            <?php } ?>
         </tbody>
     </table>
     
 </div>
+
+<img src="<?php echo $libro['imagen'] ?>" alt="hola">
 
 <?php include("../template/pie.php"); ?>
